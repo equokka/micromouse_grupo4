@@ -47,8 +47,7 @@ int main(int argc, char* argv[])
 
   int *pos = map_setup(maze);
 
-  clearscreen();
-  printf("\n");
+  system("clear");
 
   do
   {

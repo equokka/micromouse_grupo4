@@ -114,8 +114,8 @@ int *map_setup(int **maze)
     }
   }
 
-  // Coloca o cursor na posição inicial
-  printf("\033[%d;%dH", ROWS + 2 - pos[1], pos[0]);
-
   return pos;
 }
+
+int set_cursor(int *pos)
+{ printf("\033[%d;%dH", ROWS + 2 - pos[1], pos[0]); }

@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
 
   // Inicia o movimento do cursor utilizando a matriz
   int *pos = map_setup(maze);
+  set_cursor(pos);
 
   do
   {
