@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <string.h>
-#include <time.h> // for usleep()
 
 #include <moving.h>
 #include <reading.h>
@@ -66,9 +65,9 @@ int main(int argc, char* argv[])
     // Print it on the server:
     printf("<= CLIENT: %s\n", buff);
 
-    // 50 millisecond simulated delay
+    // 0.1 second simulated delay
     // FIXME
-    usleep(50 * 1000);
+    sleep(0.1);
 
     // W,A,S,D,Q,NO,OK are just an example of what kinds of codes the server
     // and client could use to communicate. Our message buffer has a size of
