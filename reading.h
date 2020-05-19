@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define FILE_DEFAULT "./maps/86.txt"
+
 #define COLUMNS 67
 #define ROWS 32
 
@@ -12,14 +13,12 @@ int **ler(int argc, char* argv[])
   char buff[COLUMNS];
   char c;
   char ficheiro[200];
+
   // Selecting the maze using the command line
-  if (argc > 1){
-    strcpy(ficheiro, argv[1]);
-  }
+  if (argc > 1)
+  { strcpy(ficheiro, argv[1]); }
   else
-  {
-    strcpy(ficheiro, FILE_DEFAULT);
-  }
+  { strcpy(ficheiro, FILE_DEFAULT); }
 
   if ((fp = fopen(ficheiro, "r")) == NULL)
   {
@@ -33,9 +32,8 @@ int **ler(int argc, char* argv[])
 
   maze = malloc(sizeof(int*) * COLUMNS); // o malloc aloca a memoria dinamicamente no apontador
 
-  for(int i = 0; i < COLUMNS; i++) {
-    maze[i] = malloc(sizeof(int*) * ROWS);
-  }
+  for (int i = 0; i < COLUMNS; i++)
+  { maze[i] = malloc(sizeof(int*) * ROWS); }
 
   FILE *fs;
   fs = fopen(ficheiro, "r");
@@ -54,22 +52,17 @@ int **ler(int argc, char* argv[])
   for (int i = ROWS; i >= 0; i--){ //(!feof(fp))
     fgets(buff, COLUMNS, (FILE*)fs);
     printf("%s", buff);
-    for(int j = 0; j < COLUMNS; j++){
-      if(buff[j] ==  ' '){
-        maze[i][j] = 0;
-        //printf("%d", maze[i][j]);
-      } else if(buff[j] == 'S'){
-        maze[i][j] = 2;
-        //printf("%d", maze[i][j]);
-      } else if(buff[j] == 'G'){
-        maze[i][j] = 3;
-        //printf("%d", maze[i][j]);
-      } else{
-        maze[i][j] = 1;
-        //printf("%d", maze[i][j]);
-      }
+    for (int j = 0; j < COLUMNS; j++)
+    {
+      if (buff[j] ==  ' ')
+      { maze[i][j] = 0; }
+      else if (buff[j] == 'S')
+      { maze[i][j] = 2; }
+      else if (buff[j] == 'G')
+      { maze[i][j] = 3; }
+      else
+      { maze[i][j] = 1; }
     }
-    //printf("\n");
   }
 
   fclose(fp);
