@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
     if (strcmp(buff, "HELLO") == 0)
     {
       // Reply with the map filename
-      memcpy(buff, map_name, sizeof(buff));
+      strcpy(buff, map_name);
     }
     // q - Quit
     else if (strcmp(buff, "q") == 0 || strcmp(buff, "Q") == 0)
