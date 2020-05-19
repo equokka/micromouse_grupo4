@@ -14,14 +14,9 @@ make
 
 ## Running
 
-Run `./bin/main [map_file.txt]`.
+Run `./bin/server [map_file.txt]` and `./bin/client`.
 
 Map defaults to [./maps/86.txt](./maps/86.txt).
-
-You can build+run:
-```sh
-make run
-```
 
 Then on the client, press <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to move. <kbd>Q</kbd> to quit.
 

@@ -62,7 +62,6 @@ int *up(int **maze, int *pos)
 
   return pos;
 }
-
 int *down(int **maze, int *pos)
 {
   pos[1]--;
@@ -74,7 +73,6 @@ int *down(int **maze, int *pos)
 
   return pos;
 }
-
 int *right(int **maze, int *pos)
 {
   pos[0]++;
@@ -86,7 +84,6 @@ int *right(int **maze, int *pos)
 
   return pos;
 }
-
 int *left(int **maze, int *pos)
 {
   pos[0]--;
@@ -99,13 +96,12 @@ int *left(int **maze, int *pos)
   return pos;
 }
 
-int mapa(int **maze)
+int *map_setup(int **maze)
 {
   int *pos;
-  char tecla;
   pos = malloc(sizeof(int*) * 2);
 
-  // Calcula a posição do S (pisição inicial)
+  // Encontra a posição inicial "S"
   for(int i = ROWS; i >= 0; i--)
   {
     for(int j = 0; j < COLUMNS; j++)
@@ -118,39 +114,8 @@ int mapa(int **maze)
     }
   }
 
-  // Coloca o cursor na posição do S
+  // Coloca o cursor na posição inicial
   printf("\033[%d;%dH", ROWS + 2 - pos[1], pos[0]);
 
-  do
-  {
-    // Receber tecla premida pelo utilizador
-    tecla = getchar();
-    char m = tecla;
-
-    switch (m)
-    {
-      case 'w':
-      case 'W':
-        pos = up(maze, pos);
-        break;
-      case 'd':
-      case 'D':
-        pos = right(maze, pos);
-        break;
-      case 's':
-      case 'S':
-        pos = down(maze, pos);
-        break;
-      case 'a':
-      case 'A':
-        pos = left(maze, pos);
-        break;
-    }
-
-    // Se chegar à posição do G o jogo acaba
-    if (maze[pos[1] - 1][pos[0] - 1] == 3)
-    { printf("\033[34;0HYOU WIN!"); }
-
-    // Fazer isto atẽ o utilizador premir a tecla q
-  } while (tecla != 'q' && tecla != 'Q');
+  return pos;
 }

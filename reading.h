@@ -1,57 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define FILE_DEFAULT "./maps/86.txt"
+#include <stdbool.h>
 
 #define COLUMNS 67
 #define ROWS 32
 
-int **ler(int argc, char* argv[])
+int **read_map(char filename[200])
 {
   FILE *fp;
   char buff[COLUMNS];
   char c;
-  char ficheiro[200];
 
-  // Selecting the maze using the command line
-  if (argc > 1)
-  { strcpy(ficheiro, argv[1]); }
-  else
-  { strcpy(ficheiro, FILE_DEFAULT); }
-
-  if ((fp = fopen(ficheiro, "r")) == NULL)
+  // Reads text until newline is encountered
+  if ((fp = fopen(filename, "r")) == NULL)
   {
     printf("Error! opening file");
     // Program exits if the file pointer returns NULL.
     exit(1);
   }
 
-  // Reads text until newline is encountered
-  int **maze; // cria um apontador
+  // Cria um apontador
+  int **maze;
 
-  maze = malloc(sizeof(int*) * COLUMNS); // o malloc aloca a memoria dinamicamente no apontador
-
+  // O malloc aloca a memoria dinamicamente no apontador
+  maze = malloc(sizeof(int*) * COLUMNS);
   for (int i = 0; i < COLUMNS; i++)
   { maze[i] = malloc(sizeof(int*) * ROWS); }
 
   FILE *fs;
-  fs = fopen(ficheiro, "r");
-  /*
-    * NOTA: Os prints comentados que se encontram no meio do código,
-    * servem para verificar como a matriz está construída, o \n final
-    * serve para "passar" para a linha seguinte
-    *
-    * Valores:
-    * Espaço vazio - 0 (int)
-    * Limites - 1 (int)
-    * Start - 2 (int)
-    * Goal - 3 (int)
-  */
+  fs = fopen(filename, "r");
+
+  // Valores:
+  // Espaço vazio - 0 (int)
+  // Limites - 1 (int)
+  // Start - 2 (int)
+  // Goal - 3 (int)
 
   for (int i = ROWS; i >= 0; i--){ //(!feof(fp))
     fgets(buff, COLUMNS, (FILE*)fs);
+
     printf("%s", buff);
+
     for (int j = 0; j < COLUMNS; j++)
     {
       if (buff[j] ==  ' ')
@@ -67,6 +57,25 @@ int **ler(int argc, char* argv[])
 
   fclose(fp);
 
-  return maze; //retorna o apontador que aponta para a matriz
+  // Retorna o apontador que aponta para a matriz
+  return maze;
+}
 
+bool check_collision(int direction, int **maze, int *pos)
+{
+  switch (direction)
+  {
+  case 0:
+    return (bool) maze[(pos[1] + 1) - 1][(pos[0]    ) - 1] != 1;
+    break;
+  case 1:
+    return (bool) maze[(pos[1] - 1) - 1][(pos[0]    ) - 1] != 1;
+    break;
+  case 2:
+    return (bool) maze[(pos[1]    ) - 1][(pos[0] + 1) - 1] != 1;
+    break;
+  case 3:
+    return (bool) maze[(pos[1]    ) - 1][(pos[0] - 1) - 1] != 1;
+    break;
+  }
 }
