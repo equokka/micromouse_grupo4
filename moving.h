@@ -127,7 +127,8 @@ int mapa(int **maze)
     tecla = getchar();
     char m = tecla;
 
-    switch(m){
+    switch (m)
+    {
       case 'w':
       case 'W':
         pos = up(maze, pos);
@@ -144,7 +145,7 @@ int mapa(int **maze)
       case 'A':
         pos = left(maze, pos);
         break;
-      }
+    }
 
     // Se chegar à posição do G o jogo acaba
     if (maze[pos[1] - 1][pos[0] - 1] == 3)
