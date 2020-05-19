@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
     }
 
     // Print the server's response on the server:
-    printf("=> SERVER: %s\n", buff);
+    printf("=> SERVER: %s (%d, %d)\n", buff, pos[0], pos[1]);
 
     // Send the response to the client:
     ret = sendto(socketfd, buff, sizeof(buff), 0, (struct sockaddr *)&client, sizeof(client));
