@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "moving.h"
-#include "reading.h"
+#include <moving.h>
+#include <reading.h>
 
 int main(int argc, char* argv[]) {
   int **maze;
