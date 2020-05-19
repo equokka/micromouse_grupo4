@@ -25,9 +25,10 @@ int main(int argc, char* argv[])
   struct sockaddr_in server;
   struct sockaddr_in client;
   int len = sizeof(struct sockaddr_in);
+  char *map_name = (argc > 1 ? argv[1] : DEFAULT_MAP);
 
   // Get map from 1st argument, use DEFAULT MAP if none is given
-  maze = read_map(argc > 1 ? argv[1] : DEFAULT_MAP);
+  maze = read_map(map_name);
 
   // Create socket
   socketfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -46,6 +47,9 @@ int main(int argc, char* argv[])
 
   int *pos = map_setup(maze);
 
+  clearscreen();
+  printf("\n");
+
   do
   {
     // Receive message from client
@@ -61,7 +65,7 @@ int main(int argc, char* argv[])
     // Now we need to handle the client message.
 
     // Print it on the server:
-    printf("CLIENT: %s\n", buff);
+    printf("<= CLIENT: %s\n", buff);
 
     // 50 millisecond simulated delay
     // FIXME
@@ -71,7 +75,15 @@ int main(int argc, char* argv[])
     // and client could use to communicate. Our message buffer has a size of
     // 255 so we could for instance send some simple serialized data
     // though, in JSON for example.
-    if (strcmp(buff, "q") == 0)
+
+    // HELLO - Hail message from client.
+    if (strcmp(buff, "HELLO") == 0)
+    {
+      // Reply with the map filename
+      memcpy(buff, map_name, sizeof(buff));
+    }
+    // q - Quit
+    else if (strcmp(buff, "q") == 0 || strcmp(buff, "Q") == 0)
     {
       snprintf(buff, sizeof(buff), "OK");
       quitting = true;
@@ -114,7 +126,7 @@ int main(int argc, char* argv[])
     }
 
     // Print the server's response on the server:
-    printf("SERVER: %s\n", buff);
+    printf("=> SERVER: %s\n", buff);
 
     // Send the response to the client:
     ret = sendto(socketfd, buff, sizeof(buff), 0, (struct sockaddr *)&client, sizeof(client));

@@ -39,8 +39,28 @@ int main(int argc, char* argv[])
   // Colocar o terminal no modo cbreak ou rare
   cbreak();
 
-  // Retorna a matriz // FIXME get this from the server
-  maze = read_map(argc > 1 ? argv[1] : "./maps/86.txt");
+  // Hail the server.
+  snprintf(buff, sizeof(buff), "HELLO");
+  ret = sendto(socketfd, buff, sizeof(buff), 0, (struct sockaddr *)&server, sizeof(server));
+  // Error handling
+  if (ret < 0)
+  {
+    printf("Error sending message\n");
+    quitting = true;
+    error = true;
+  }
+  // Receive map from the server.
+  ret = recvfrom(socketfd, buff, sizeof(buff), 0, (struct sockaddr *)&server, &len);
+  // Error handling
+  if (ret < 0)
+  {
+    printf("Error when receiving\n");
+    quitting = true;
+    error = true;
+  }
+
+  // Set map to what we got from the server.
+  maze = read_map(buff);
 
   // Inicia o movimento do cursor utilizando a matriz
   int *pos = map_setup(maze);
