@@ -14,7 +14,9 @@ make
 
 ## Running
 
-Run `./bin/main`
+Run `./bin/main [map_file.txt]`.
+
+Map defaults to [./maps/86.txt](./maps/86.txt).
 
 You can build+run:
 ```sh
