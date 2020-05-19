@@ -1,31 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define FILE_DEFAULT "./test.txt"
 
+#define FILE_DEFAULT "./maps/86.txt"
 #define COLUMNS 67
 #define ROWS 32
 
-int **ler(int argc, char* argv[]) {
-
+int **ler(int argc, char* argv[])
+{
   FILE *fp;
   char buff[COLUMNS];
   char c;
   char ficheiro[200];
-  //Selecting the maze using the commandline
+  // Selecting the maze using the command line
   if (argc > 1){
-    strcpy(ficheiro,argv[1]);
+    strcpy(ficheiro, argv[1]);
   }
   else
   {
     strcpy(ficheiro, FILE_DEFAULT);
   }
-  if ((fp = fopen(ficheiro,"r")) == NULL){
+
+  if ((fp = fopen(ficheiro, "r")) == NULL)
+  {
     printf("Error! opening file");
     // Program exits if the file pointer returns NULL.
     exit(1);
   }
-  // reads text until newline is encountered
+
+  // Reads text until newline is encountered
   int **maze; // cria um apontador
 
   maze = malloc(sizeof(int*) * COLUMNS); // o malloc aloca a memoria dinamicamente no apontador
@@ -48,8 +51,8 @@ int **ler(int argc, char* argv[]) {
     * Goal - 3 (int)
   */
 
-  for (int i=ROWS;i>=0;i--){ //(!feof(fp))
-    fgets(buff,COLUMNS, (FILE*)fs);
+  for (int i = ROWS; i >= 0; i--){ //(!feof(fp))
+    fgets(buff, COLUMNS, (FILE*)fs);
     printf("%s", buff);
     for(int j = 0; j < COLUMNS; j++){
       if(buff[j] ==  ' '){
