@@ -98,12 +98,12 @@ int main(int argc, char* argv[])
         pos[1] += 1;
         snprintf(buff, sizeof(buff), "OK");
       }
-      else if ((strcmp(buff, "d") == 0 || strcmp(buff, "D") == 0) && check_collision(1, maze, pos))
+      else if ((strcmp(buff, "s") == 0 || strcmp(buff, "D") == 0) && check_collision(1, maze, pos))
       {
         pos[1] -= 1;
         snprintf(buff, sizeof(buff), "OK");
       }
-      else if ((strcmp(buff, "s") == 0 || strcmp(buff, "S") == 0) && check_collision(2, maze, pos))
+      else if ((strcmp(buff, "d") == 0 || strcmp(buff, "S") == 0) && check_collision(2, maze, pos))
       {
         pos[0] += 1;
         snprintf(buff, sizeof(buff), "OK");
