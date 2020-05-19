@@ -1,24 +1,15 @@
 # Makefile
 
+# Whenever you run "make" with no arguments, it runs the first definition, and
+# thus that is the "default" one. Here we set main as the default.
 .PHONY: default
-default: executavel
+default: main
 
-# É criado um ficheiro executável que por sua vez precisa de dois ficheiro
-# moving_in_screen e o reading_a_file
-executavel: moving_in_screen.o reading_a_file.o
-  # São compilados os ficherios main.c  oving_in_screen e o reading_a_file
-	gcc -o  executavel main.c moving_in_screen.o reading_a_file.o
+# Binaries go in the bin(ary) folder.
+main: main.c
+	gcc -I. -o ./bin/$@ $^
 
-# criado os ficheiros .o que são chamados pelo executável
-moving_in_screen.o:
-	gcc -c moving_in_screen.c
-reading_a_file.o:
-	gcc  -c reading_a_file.c
-
-clean:
-	rm -f moving_in_screen.o reading_a_file.o # apagar os ficheiros criados, antes de fazer o make vai.
-
-# O vai foi para demostrar o quão pode ser útil esse filcheiro.
-# Para executar o ficheiro basta escrever make vai .
-vai:
-	./executavel
+# This definition depends on "main" and thus will run it (compiling ./bin/main)
+# and only then run the commands below.
+run: main
+	./bin/main
