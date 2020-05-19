@@ -63,19 +63,14 @@ int **read_map(char filename[200])
 
 bool check_collision(int direction, int **maze, int *pos)
 {
+  int newpos;
+
   switch (direction)
   {
-  case 0:
-    return (bool) maze[(pos[1] + 1) - 1][(pos[0]    ) - 1] != 1;
-    break;
-  case 1:
-    return (bool) maze[(pos[1] - 1) - 1][(pos[0]    ) - 1] != 1;
-    break;
-  case 2:
-    return (bool) maze[(pos[1]    ) - 1][(pos[0] + 1) - 1] != 1;
-    break;
-  case 3:
-    return (bool) maze[(pos[1]    ) - 1][(pos[0] - 1) - 1] != 1;
-    break;
+    case 0: newpos = maze[(pos[1] + 1) - 1][(pos[0]    ) - 1]; break;
+    case 1: newpos = maze[(pos[1] - 1) - 1][(pos[0]    ) - 1]; break;
+    case 2: newpos = maze[(pos[1]    ) - 1][(pos[0] + 1) - 1]; break;
+    case 3: newpos = maze[(pos[1]    ) - 1][(pos[0] - 1) - 1]; break;
   }
+  return (bool) newpos != 1;
 }
