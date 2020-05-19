@@ -45,7 +45,6 @@ int main(int argc, char* argv[])
   { printf("Error while binding\n"); return 1; }
 
   int *pos = map_setup(maze);
-
   system("clear");
 
   do
@@ -77,6 +76,8 @@ int main(int argc, char* argv[])
     // HELLO - Hail message from client.
     if (strcmp(buff, "HELLO") == 0)
     {
+      pos = map_setup(maze);
+      system("clear");
       // Reply with the map filename
       strcpy(buff, map_name);
     }
