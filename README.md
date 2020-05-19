@@ -5,6 +5,10 @@ Daniel Conceição
 Diogo Carreiro  
 Manuel Cabral
 
+## Developing
+
+Please use [EditorConfig](https://editorconfig.org/).
+
 ## Building
 
 This command builds to `./bin/main`
