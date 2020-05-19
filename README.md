@@ -1,4 +1,9 @@
-# Micromouse
+# Micromouse (Grupo 4)
+
+**Grupo 4**:  
+Daniel Conceição  
+Diogo Carreiro  
+Manuel Cabral
 
 ## Building
 
