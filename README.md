@@ -52,7 +52,7 @@ Please use [EditorConfig](https://editorconfig.org/).
 
 ## Building
 
-This command builds to `./bin/main`
+This command builds `./bin/server` and `./bin/client`.
 ```sh
 make
 ```
