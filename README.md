@@ -6,15 +6,8 @@ Diogo Carreiro
 Manuel Cabral
 
 ## Objetivos
+
 <details><summary>(Click here)</summary>
-
-### Primeira Etapa
-
-* [x] a) Programa que mexe o rato no ecrã de terminal de comandos utilizando as teclas "w","s","a" e "d". Este programa servirá para colocar o cursor a deslocar-se no labirinto do micro-rato.
-* [x] b) Programa que cria uma matriz (vetor de duas dimensões) que guarda informação de um ficheiro labirinto do micro-rato. Este programa deve mostrarque as posições da matriz correspondem a posições no labirinto.
-* [x] c) Junção de ambos os programas: um labirinto a ser explorado por um utilizador utilizando as teclas do terminal.
-* [x] d) Preparar um ficheiro Makefile para a compilação automática de todas as componentes.
-* [x] e) Criação de um espaço no github para o projeto e introdução da última versão do projeto. Criação de pequeno manual de introdução ao funcionamento do git gerir as versões de um projeto.
 
 ### Segunda Etapa
 
