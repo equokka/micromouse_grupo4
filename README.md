@@ -42,6 +42,17 @@ Manuel Cabral
 * [ ] l) [tornar rato totalmente autónomo] O “rato” é agora autónomo a pesquisar/explorar o labirinto. Definir o número de vezes que o “rato” pode aceder ao objetivo antes de uma demonstração onde o rato autonomamente executa executa o percurso o mais rapido possível. É contabilizado o número de passos (movimento em frente, virar direita, virar esquerda, recuar) executados e atribuído uma pontuação (a definir).
 * [ ] m) [ simulador para usar pelos participantes num micromouse] Pesquisar e, eventualmente, implementar algoritmo que é utilizado pelos investigadores neste tipo de provas.
 
+### Elementos de Qualidade
+
+* [ ] Código segue o modelo proposto no contexto do documento orientador do projeto.
+* [ ] O código é dividido em ficheiros diferentes de acordo com a funcionalidade (e.g. o produtor num ficheiro diferente do consumidor).
+* [x] Existe facilidade em estabelecer comunicação entre o cliente e o servidor.
+* [x] O código é comentado tanto do lado do servidor como do cliente.
+* [x] A compilação faz-se através da ferramenta Makefile.
+* [x] O código está disponível no github para poder ser descarregado e um ficheiro readme descreve a sua funcionalidade.
+* [ ] Existe facilidade em carregar diferentes tipos de labirinto.
+* [ ] O código está preparado para acrescentar algumas das novas funcionalidades previstas/propostas em discussão. 
+
 ---
 
 </details>
