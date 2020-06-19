@@ -24,4 +24,4 @@ default: server client
 client: client.c
 	gcc -I. -o ./bin/$@ $^
 server: server.c
-	gcc -I. -o ./bin/$@ $^
+	gcc -pthread -I. -o ./bin/$@ $^

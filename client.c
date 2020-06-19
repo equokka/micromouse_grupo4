@@ -11,9 +11,11 @@
 #include <moving.h>
 #include <reading.h>
 
+#define PORT 8080
+
 int main(int argc, char* argv[])
 {
-  int **maze;
+  int **maze; //vem do reading.h
   int socketfd;
   int ret;
   char buff[255];
@@ -30,8 +32,8 @@ int main(int argc, char* argv[])
 
   // Wildcards
   server.sin_family = AF_INET;
-  server.sin_port = htons(8000);
-  server.sin_addr.s_addr = inet_addr("127.0.0.1");
+  server.sin_port = htons(PORT);
+  server.sin_addr.s_addr = INADDR_ANY;
 
   // Limpar o ecrã
   clearscreen();
@@ -127,7 +129,7 @@ int main(int argc, char* argv[])
     // If we get to G (goal), end the game.
     // TODO: handle winning better than this
     if (maze[pos[1] - 1][pos[0] - 1] == 3)
-    { printf("\033[34;0HYOU WIN!"); }
+    { printf("\033[34;0H YOU WIN!"); }
 
     // Fazer isto atẽ o utilizador premir a key q
   } while (quitting == false);
@@ -139,4 +141,3 @@ int main(int argc, char* argv[])
 
   return (error ? 1 : 0);
 }
-
