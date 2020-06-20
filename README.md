@@ -17,8 +17,8 @@ Manuel Cabral
 * [x] b) Crie um programa que testa a utilização de sockets que permita a comunicação entre dois processos utilizando a comunicação no protocolo UDP.
 * [x] c) Crie um cliente que possa enviar os comandos de movimento do cursor através de socket.
 * [x] d) Para além dos comandos de controlo da direção, um comando de fim de interação.
-* [ ] e) [modo de funcionamento do servidor] O programa deverá funcionar em dois modos:
-  * [ ] i. Modo com apenas três teclas - virar à direita, virar à esquerda e ir em frente
+* [x] e) [modo de funcionamento do servidor] O programa deverá funcionar em dois modos:
+  * [x] i. Modo com apenas três teclas - virar à direita, virar à esquerda e ir em frente
   * [x] ii. Modo habitual com quatro teclas, a saber, mover-se para a esquerda, mover-se para a direita, mover-se para cima e mover-se para baixo.
 * [x] f) [modelo de prog. concorrente] Altere o servidor de forma a que a sua execução se faça com duas threads com a partilha de uma estrutura de dados do tipo fila, onde são armazenados os comandos pela primeira thread (que os recebe via socket) e onde são retirados para execução da segunda thread para atualizar o movimento do cursor no simulador.
 * [x] g) [interação com servidor] Com o comando de teclas no cliente irá observar-se o movimento do cursor no simulador na parte do servidor.
@@ -49,6 +49,14 @@ Manuel Cabral
 ---
 
 </details>
+
+## Informação
+
+Para utilizar o programa, compile os binários com o programa `make` primeiro. Depois, abra duas janelas de terminal, e numa corra `./bin/server` e noutra o `./bin/client`.  
+Se quiser um mapa específico, pode adicionar a opção `-map ./maps/50.txt`, com um dos mapas nessa pasta.  
+Se quiser utilizar o modo de três teclas, pode adicionar a opção `--three`.
+
+---
 
 ## Developing
 

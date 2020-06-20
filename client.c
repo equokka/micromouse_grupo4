@@ -10,7 +10,6 @@
 
 #include <moving.h>
 #include <reading.h>
-
 #define PORT 8080
 
 int main(int argc, char* argv[])
@@ -18,7 +17,9 @@ int main(int argc, char* argv[])
   int **maze; //vem do reading.h
   int socketfd;
   int ret;
+  int facing = 0;
   char buff[255];
+  char status[255];
   char key;
   bool quitting = false;
   bool error = false;
@@ -61,8 +62,16 @@ int main(int argc, char* argv[])
     error = true;
   }
 
-  // Set map to what we got from the server.
-  maze = read_map(buff);
+  // Set map & gamemode to what we got from the server.
+  int gamemode = ((int) buff[0]) - 48;
+
+  char bufmap[255];
+  bufmap[0] = '\0';
+  for (int i = 1; i < strlen(buff); i++) {
+    strncat(bufmap, &buff[i], 1);
+  }
+
+  maze = read_map(bufmap);
 
   // Inicia o movimento do cursor utilizando a matriz
   int *pos = map_setup(maze);
@@ -94,36 +103,61 @@ int main(int argc, char* argv[])
       error = true;
     }
 
-    // Check if the server approves.
-    if (strcmp(buff, "OK") == 0)
-    {
-      // Quit on Q
-      if (key == 'q')
-      { quitting = true; }
-      // Move on WASD
-      else
-      {
-        switch(key) {
-          case 'w': // "cima"
-            up(maze, pos);
-            break;
-          case 's': // "baixo"
-            down(maze, pos);
-            break;
-          case 'd': // "direita"
-            right(maze, pos);
-            break;
-          case 'a': // "esquerda"
-            left(maze, pos);
-            break;
-        }
-      }
-    }
+    // Quit on Q
+    if (key == 'q' && strcmp(buff, "OK") == 0)
+    { quitting = true; }
+
     // Quit on error reply.
-    else if (strcmp(buff, "ERROR") == 0)
+    if (strcmp(buff, "ERROR") == 0)
     {
       quitting = true;
       error = true;
+    }
+
+    // Regular gamemode
+    if (gamemode == 1)
+    {
+      // Check if the server approves.
+      if (strcmp(buff, "OK") == 0)
+      {
+        // Move on WASD
+        switch(key) {
+          case 'w': up(maze,    pos); break;
+          case 's': down(maze,  pos); break;
+          case 'd': right(maze, pos); break;
+          case 'a': left(maze,  pos); break;
+        }
+      }
+    }
+
+    // Three-key gamemode
+    else if (gamemode == 2)
+    {
+      // Forward
+      if (key == 'w')
+      {
+        if (strcmp(buff, "OK") == 0)
+        {
+          if      (facing == 0) { up(maze,    pos); }
+          else if (facing == 1) { right(maze, pos); }
+          else if (facing == 2) { down(maze,  pos); }
+          else if (facing == 3) { left(maze,  pos); }
+        }
+      }
+      // Turning
+      else if (key == 'd' || key == 'a')
+      {
+        // If we're turning, we're expecting a message like this:
+        // <0,1,2,3>OK
+        // where the number is for updating the facing variable.
+        status[0] = '\0';
+        for (int i = 1; i < strlen(buff); i++) {
+          strncat(status, &buff[i], 1);
+        }
+
+        if (strcmp(status, "OK") == 0)
+        { facing = ((int) buff[0]) - 48; }
+      }
     }
 
     // If we get to G (goal), end the game.

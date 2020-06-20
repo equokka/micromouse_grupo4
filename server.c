@@ -10,9 +10,11 @@
 #include <moving.h>
 #include <reading.h>
 #include <pthread.h>
+#include <getopt.h>
 
 #define PORT 8080
 #define DEFAULT_MAP "./maps/86.txt"
+#define DEFAULT_GAMEMODE 1
 
 pthread_t producert, consumert;
 pthread_cond_t  empt  = PTHREAD_COND_INITIALIZER;
@@ -35,9 +37,60 @@ int *pos;
 struct sockaddr_in server;
 struct sockaddr_in client;
 int len = sizeof(struct sockaddr_in);
+int gamemode;
+int facing = 0;
 
 int main(int argc, char* argv[])
 {
+
+  // Argument defaults
+  map_name = DEFAULT_MAP;
+  gamemode = DEFAULT_GAMEMODE;
+
+  // Read arguments
+  int             c;
+  const char    * short_opt = "hf:";
+  struct option   long_opt[] =
+  {
+    {"map",           required_argument, NULL, 'm'},
+    {"three",         no_argument,       NULL, 't'},
+    {"help",          no_argument,       NULL, 'h'},
+    {NULL,            0,                 NULL, 0  }
+  };
+
+  while((c = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1)
+    {
+      switch(c)
+      {
+        case -1: // no more arguments
+        case 0:  // long options toggles
+          break;
+
+        // Map name
+        case 'm': map_name = optarg; break;
+        // Use three-key gamemode
+        case 't': gamemode = 2;      break;
+
+        case 'h':
+          printf("Usage: %s [OPTIONS]\n", argv[0]);
+          printf("  --map ./map/map.txt       map file\n");
+          printf("  --three                   use three-key gamemode\n");
+          printf("  -h, --help                print this help and exit\n");
+          printf("\n");
+          return(0);
+
+        case ':':
+        case '?':
+          fprintf(stderr, "Try `%s --help' for more information.\n", argv[0]);
+          return(-2);
+
+        default:
+          fprintf(stderr, "%s: invalid option -- %c\n", argv[0], c);
+          fprintf(stderr, "Try `%s --help' for more information.\n", argv[0]);
+          return(-2);
+      };
+    };
+
   // Create socket
   socketfd = socket(AF_INET, SOCK_DGRAM, 0);//domain,type,protocolo
   if (socketfd < 0)
@@ -55,8 +108,6 @@ int main(int argc, char* argv[])
 
   system("clear");
 
-  // Get map from 1st argument, use DEFAULT MAP if none is given
-  map_name = (argc > 1 ? argv[1] : DEFAULT_MAP);
   maze = read_map(map_name);
   pos = map_setup(maze);
 
@@ -84,7 +135,6 @@ void *producer()
     quitting = true;
     error = true;
   }
-
   counterino++;
   pthread_cond_signal(&full);
   pthread_mutex_unlock(&mutex);
@@ -114,8 +164,11 @@ void *consumer()
   // HELLO - Hail message from the client.
   if (strcmp(buff, "HELLO") == 0)
   {
-    // Reply with the map filename
-    strcpy(buff, map_name);
+    // Reply with the gamemode & map filename
+    char gamemode_c[255];
+    gamemode_c[0] = '\0';
+    sprintf(gamemode_c, "%d", gamemode);
+    strcpy(buff, strcat(gamemode_c, map_name));
   }
   // q - Quit
   else if (strcmp(buff, "q") == 0 || strcmp(buff, "Q") == 0)
@@ -125,32 +178,89 @@ void *consumer()
   }
   else if (
     strcmp(buff, "w") == 0 ||
-    strcmp(buff, "s") == 0 ||
     strcmp(buff, "d") == 0 ||
+    strcmp(buff, "s") == 0 ||
     strcmp(buff, "a") == 0 )
   {
-    if      ((strcmp(buff, "w") == 0 || strcmp(buff, "W") == 0) && check_collision(0, maze, pos))
+    // Normal gamemode
+    if (gamemode == 1)
     {
-      pos[1] += 1;
-      snprintf(buff, sizeof(buff), "OK");
+      if      ((strcmp(buff, "w") == 0 || strcmp(buff, "W") == 0) && check_collision(0, maze, pos))
+      {
+        pos[1] += 1;
+        snprintf(buff, sizeof(buff), "OK");
+      }
+      else if ((strcmp(buff, "d") == 0 || strcmp(buff, "D") == 0) && check_collision(1, maze, pos))
+      {
+        pos[0] += 1;
+        snprintf(buff, sizeof(buff), "OK");
+      }
+      else if ((strcmp(buff, "s") == 0 || strcmp(buff, "S") == 0) && check_collision(2, maze, pos))
+      {
+        pos[1] -= 1;
+        snprintf(buff, sizeof(buff), "OK");
+      }
+      else if ((strcmp(buff, "a") == 0 || strcmp(buff, "A") == 0) && check_collision(3, maze, pos))
+      {
+        pos[0] -= 1;
+        snprintf(buff, sizeof(buff), "OK");
+      }
+      else
+      { snprintf(buff, sizeof(buff), "NO"); }
     }
-    else if ((strcmp(buff, "s") == 0 || strcmp(buff, "D") == 0) && check_collision(1, maze, pos))
+    // Three-key gamemode
+    else if (gamemode == 2)
     {
-      pos[1] -= 1;
-      snprintf(buff, sizeof(buff), "OK");
+      // Forward
+      if ((strcmp(buff, "w") == 0 || strcmp(buff, "W") == 0) && check_collision(facing, maze, pos))
+      {
+        if      (facing == 0) {
+          pos[1] += 1;
+          snprintf(buff, sizeof(buff), "OK");
+        }
+        else if (facing == 1) {
+          pos[0] += 1;
+          snprintf(buff, sizeof(buff), "OK");
+        }
+        else if (facing == 2) {
+          pos[1] -= 1;
+          snprintf(buff, sizeof(buff), "OK");
+        }
+        else if (facing == 3) {
+          pos[0] -= 1;
+          snprintf(buff, sizeof(buff), "OK");
+        }
+      }
+      // Turn right
+      else if ((strcmp(buff, "d") == 0 || strcmp(buff, "D") == 0))
+      {
+        if (facing == 3) { facing = 0;  } // No negative values
+        else             { facing += 1; }
+
+        char status[255];
+        status[0] = '\0';
+        sprintf(status, "%d", facing);
+        strcat(status, "OK");
+
+        snprintf(buff, sizeof(buff), status);
+      }
+      // Turn left
+      else if ((strcmp(buff, "a") == 0 || strcmp(buff, "A") == 0))
+      {
+        if (facing == 0) { facing = 3;  } // No values greater than 3
+        else             { facing -= 1; }
+
+        char status[255];
+        status[0] = '\0';
+        sprintf(status, "%d", facing);
+        strcat(status, "OK");
+
+        snprintf(buff, sizeof(buff), status);
+      }
+      else
+      { snprintf(buff, sizeof(buff), "NO"); }
     }
-    else if ((strcmp(buff, "d") == 0 || strcmp(buff, "S") == 0) && check_collision(2, maze, pos))
-    {
-      pos[0] += 1;
-      snprintf(buff, sizeof(buff), "OK");
-    }
-    else if ((strcmp(buff, "a") == 0 || strcmp(buff, "A") == 0) && check_collision(3, maze, pos))
-    {
-      pos[0] -= 1;
-      snprintf(buff, sizeof(buff), "OK");
-    }
-    else
-    { snprintf(buff, sizeof(buff), "NO"); }
+
   }
   else
   {
